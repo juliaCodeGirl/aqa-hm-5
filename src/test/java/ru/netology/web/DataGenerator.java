@@ -21,7 +21,6 @@ public class DataGenerator {
         );
         Random item = new Random();
         String randomElement = (String) list.get(item.nextInt(list.size()));
-        System.out.println(randomElement);
         return randomElement;
     }
 

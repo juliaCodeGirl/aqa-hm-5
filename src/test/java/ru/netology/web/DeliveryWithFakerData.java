@@ -1,10 +1,13 @@
 package ru.netology.web;
 
+import com.codeborne.selenide.Condition;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
-import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Condition.visible;
+
+import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -33,6 +36,7 @@ public class DeliveryWithFakerData {
         $("[data-test-id='agreement']").click();
         $$("button").find(exactText("Запланировать")).click();
         $(".notification__title").waitUntil(visible, 12000);
+        $("[data-test-id='success-notification'] .notification__content").shouldHave(text("Встреча успешно запланирована на " + date));
 
         open("http://localhost:9999/");
         $("[data-test-id='city'] [type='text']").setValue(city);
@@ -41,10 +45,10 @@ public class DeliveryWithFakerData {
         $("[data-test-id='name'] [type='text']").setValue(name);
         $("[data-test-id='phone'] [type='tel']").setValue(phone);
         $("[data-test-id='agreement']").click();
-        $$("button").find(exactText("Запланировать")).click();
+        $(byText("Запланировать")).click();
         $("[data-test-id=replan-notification] button").click();
-        String getText = $("[data-test-id='success-notification'] div.notification__title").getText();
-        assertEquals("Успешно!", getText);
+        $(withText("Успешно!")).waitUntil(Condition.visible, 12000);
+        $("[data-test-id='success-notification'] .notification__content").shouldHave(text("Встреча успешно запланирована на " + dateOver));
     }
 
     @Test
@@ -67,8 +71,7 @@ public class DeliveryWithFakerData {
         $("[data-test-id='phone'] [type='tel']").setValue(phone);
         $("[data-test-id='agreement']").click();
         $$("button").find(exactText("Запланировать")).click();
-        String getText = $("[data-test-id=date] .input__sub").getText();
-        assertEquals("Заказ на выбранную дату невозможен", getText);
+        $(withText("Заказ на выбранную дату невозможен")).waitUntil(Condition.visible, 12000);
     }
 
     @Test
@@ -91,7 +94,6 @@ public class DeliveryWithFakerData {
         $("[data-test-id='phone'] [type='tel']").setValue(phone);
         $("[data-test-id='agreement']").click();
         $$("button").find(exactText("Запланировать")).click();
-        String getText = $("[data-test-id=date] .input__sub").getText();
-        assertEquals("Заказ на выбранную дату невозможен", getText);
+        $(withText("Заказ на выбранную дату невозможен")).waitUntil(Condition.visible, 12000);
     }
 }
